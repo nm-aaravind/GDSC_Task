@@ -1,6 +1,6 @@
-import mongoose from "mongoose";
+const mongoose=require("mongoose")
 const courseSchema=new mongoose.Schema({
-    name:{
+    courseName:{
         type:String,
         require:true,
         unique:true
@@ -12,8 +12,13 @@ const courseSchema=new mongoose.Schema({
     },
     capacity:{
         type:Number,
-        require:true
-    }
+        require:true,
+        min:[0,"No more seats left"]
+    },
+    students:[{
+        type:mongoose.Schema.Types.ObjectId,
+        ref:'Student'
+    }]
 })
 const Course=mongoose.model('Course',courseSchema);
-export default Course;
+module.exports=Course;

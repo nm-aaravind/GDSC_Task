@@ -1,9 +1,17 @@
-import Student from "../models/student.js";
+const Student=require("../models/student")
 class studentRepository{
     async createStudent(data){
         try {
             const response=await Student.create(data);
             console.log(response)
+            return response;
+        } catch (error) {
+            console.log(error)
+        }
+    }
+    async getForSignIn(data){
+        try {
+            const response=await Student.findOne({regno:data.regno})
             return response;
         } catch (error) {
             console.log(error)
@@ -31,4 +39,4 @@ class studentRepository{
         }
     }
 }
-export default studentRepository;
+module.exports=studentRepository;

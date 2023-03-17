@@ -1,12 +1,12 @@
-import mongoose from "mongoose";
+const mongoose=require('mongoose')
 const studentSchema=mongoose.Schema({
-    name:{
-        type:String,
-        require:true
-    },
     regno:{
         type:Number,
         unique:true,
+        require:true
+    },
+    password:{
+        type:String,
         require:true
     },
     courses:[{
@@ -15,4 +15,4 @@ const studentSchema=mongoose.Schema({
     }]
 },{timestamps:true})
 const Student=mongoose.model('Student',studentSchema);
-export default Student;
+module.exports=Student;
