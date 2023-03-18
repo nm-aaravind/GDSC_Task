@@ -12,8 +12,8 @@ const signUp=async (req,res)=>{
             success:true
         })
     } catch (error) {
-        console.log(error)
         return res.status(400).json({
+            message:error.message,
             success:false
         })
     }
@@ -31,6 +31,7 @@ const signIn=async (req,res)=>{
     } catch (error) {
         console.log(error)
         return res.status(400).json({
+            message:error.message,
             success:false
         })
     }
@@ -38,12 +39,47 @@ const signIn=async (req,res)=>{
 const registerCourse=async (req,res)=>{
     try {
         const response=await StudentService.registerCourse({
-            
+            courseName:req.body.courseName,
+            courseCode:req.body.courseCode,
+            regno:req.body.regno,
+            id:req.body.id
+        })
+        return res.status(200).json({
+            data:response,
+            success:true
         })
     } catch (error) {
-        
+        return res.status(400).json({
+            error:error.message,
+            success:false
+        })
+    }
+}
+const listCourses=async (req,res)=>{
+    try {
+        const response=await StudentService.listCourses();
+        return res.status(200).json({
+            courses:response,
+            success:true
+        })
+    } catch (error) {
+        console.log(error)
+    }
+}
+const viewRegisteredCourses=async (req,res)=>{
+    try {
+        const response=await StudentService.viewRegisteredCourses(req.body.id)
+        return res.status(200).json({
+            data:response,
+            success:true
+        })
+    } catch (error) {
+        return res.status(400).json({
+            error:error.message,
+            success:false
+        })
     }
 }
 module.exports={
-    signUp,signIn,registerCourse
+    signUp,signIn,registerCourse,listCourses,viewRegisteredCourses
 }

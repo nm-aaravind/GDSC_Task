@@ -13,11 +13,12 @@ const courseSchema=new mongoose.Schema({
     capacity:{
         type:Number,
         require:true,
+        unique:false,
         min:[0,"No more seats left"]
     },
     students:[{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'Student'
+        ref:"Student"
     }]
 })
 const Course=mongoose.model('Course',courseSchema);
