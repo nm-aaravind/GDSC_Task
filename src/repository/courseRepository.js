@@ -28,7 +28,7 @@ class courseRepository{
                 _id:response.students
             })
             students.forEach((element)=>{
-                element.capacity=element.capacity+1;
+                // element.capacity=element.capacity+1;
                 element.courses.splice(element.courses.indexOf(response.id),1)
                 element.save();
             })
@@ -43,7 +43,8 @@ class courseRepository{
     async registerCourse(data){
         try {
             const course=await Course.findOne({
-                courseCode:data.courseCode
+                courseCode:data.courseCode,
+                courseName:data.courseName
             });
             if(!course){
                 throw new DefinedError("Course Not Found",404);
@@ -92,7 +93,7 @@ class courseRepository{
             }
             response.students.splice(response.students.indexOf(student.id),1)
             student.courses.splice(student.courses.indexOf(response.id),1)
-            console.log(response,student)
+            response.capacity=response.capacity+1;
             await response.save();
             await student.save();
             return true;

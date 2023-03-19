@@ -14,7 +14,7 @@ class studentRepository{
             if(error.message.match('E11000 duplicate key error collection:')){
                 throw new DefinedError("User already exists",500)
             }
-            throw error
+            throw new DefinedError(error.message,400)
         }
     }
     async getForSignIn(data){
@@ -25,7 +25,7 @@ class studentRepository{
             }
             return response;
         } catch (error) {
-            throw error;
+            throw new DefinedError(error.message,400);
         }
     }
     async getById(data){

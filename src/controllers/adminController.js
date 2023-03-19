@@ -37,7 +37,7 @@ const deleteCourse=async (req,res)=>{
             success:response
         })
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode).json({
             message:error.message,
             success:false
         })
@@ -60,7 +60,7 @@ const signIn=async (req,res)=>{
             success:true
         })
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode).json({
             message:error.message,
             success:false
         })
