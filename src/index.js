@@ -2,16 +2,10 @@ const express=require('express')
 const connect=require("./config/db")
 const router=require("./routes/routes.js")
 const env=require("./config/dotenv")
-const studentService=require("./services/studentService.js")
-const studentController=require("./controllers/studentController")
 const bodyParser=require("body-parser")
 
-
-
-
-// const repo=new studentRepository();
 const app=express();
-app.listen(env.PORT,async (req,res)=>{
+app.listen(env.PORT,async ()=>{
     console.log("Server started on PORT",env.PORT)
     if(await connect()){
         console.log("Connected to DB")

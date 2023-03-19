@@ -1,7 +1,8 @@
 -Documentation: doc.pdf
 
--Setting up the project on Linux machine:
+-Setting up the project on Linux machine/Remote server:
 
+    -Execute "sudo apt-get update" and "sudo apt-get upgrade"
     -Install Nodejs using the following command: "sudo apt install nodejs"
     -Install npm using: "sudo apt install npm"
     -Verify the Nodejs version using: "node -v" or "node -version"

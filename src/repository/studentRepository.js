@@ -1,6 +1,5 @@
 const DefinedError=require("../utils/error")
 const Student=require("../models/student")
-const Course=require("../models/course")
 class studentRepository{
     async createStudent(data){
         try {
