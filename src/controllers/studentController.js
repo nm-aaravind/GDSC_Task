@@ -3,6 +3,12 @@ const pw=require("../utils/encrypt-decrypt")
 const StudentService=new studentService();
 const signUp=async (req,res)=>{
     try {
+        if(!(req.body.registerno && req.body.password)){
+            return res.status(400).json({
+                message:"Missing mandatory field, check request body",
+                success:false
+            })
+        }
         const response=await StudentService.createStudent({
             regno:req.body.registerno,
             password:pw.encryptPassword(req.body.password)
@@ -12,7 +18,7 @@ const signUp=async (req,res)=>{
             success:true
         })
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode).json({
             message:error.message,
             success:false
         })
@@ -20,6 +26,12 @@ const signUp=async (req,res)=>{
 }
 const signIn=async (req,res)=>{
     try {
+        if(!(req.body.registerno && req.body.password)){
+            return res.status(400).json({
+                message:"Missing mandatory field, check request body",
+                success:false
+            })
+        }
         const response=await StudentService.getForSignIn({
             regno:req.body.registerno,
             password:req.body.password
@@ -29,8 +41,7 @@ const signIn=async (req,res)=>{
             success:true
         })
     } catch (error) {
-        console.log(error)
-        return res.status(400).json({
+        return res.status(error.statusCode).json({
             message:error.message,
             success:false
         })
@@ -38,6 +49,12 @@ const signIn=async (req,res)=>{
 }
 const registerCourse=async (req,res)=>{
     try {
+        if(!(req.body.courseName && req.body.courseCode)){
+            return res.status(400).json({
+                message:"Missing mandatory fields, check request body",
+                success:false
+            })
+        }
         const response=await StudentService.registerCourse({
             courseName:req.body.courseName,
             courseCode:req.body.courseCode,
@@ -49,7 +66,7 @@ const registerCourse=async (req,res)=>{
             success:true
         })
     } catch (error) {
-        return res.status(400).json({
+        return res.status(error.statusCode).json({
             error:error.message,
             success:false
         })

@@ -11,13 +11,15 @@ const bodyParser=require("body-parser")
 
 // const repo=new studentRepository();
 const app=express();
-app.listen(env.PORT,async ()=>{
-    app.use(bodyParser.json());
-    app.use(bodyParser.urlencoded({extended:true}))
+app.listen(env.PORT,async (req,res)=>{
     console.log("Server started on PORT",env.PORT)
-    connect().catch(err=>{
-        throw new Error("DB Connection Error")
-    });
-    console.log("DB Connected");
-    app.use('/api',router)
+    if(await connect()){
+        console.log("Connected to DB")
+        app.use(bodyParser.json());
+        app.use(bodyParser.urlencoded({extended:true}))
+        app.use('/api',router)
+    }
+    else{
+        console.log("Internal DB Error");
+    }
 })

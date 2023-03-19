@@ -1,3 +1,4 @@
+const DefinedError=require("../utils/error")
 const jwt=require("jsonwebtoken")
 const studentService=require('../services/studentService')
 const {ADMIN_PASSWORD,ADMIN_USER_ID,JWT_SALT}=require('../config/dotenv')
@@ -6,7 +7,7 @@ async function verifyTokenStudent(req,res,next){
     try {
         const token=req.headers.authorization
         if(!token){
-            throw new Error("No token received")
+            throw new DefinedError("No token received",400)
         }
         const result=jwt.verify(token.substring(7),JWT_SALT);
             const response=await nn.getById(result.id)
@@ -15,8 +16,8 @@ async function verifyTokenStudent(req,res,next){
                 next();
             }
             else{
-                return res.json({
-                    message:'No such user exists',
+                return res.status(404).json({
+                    message:'Student Not Found',
                     success:false
                 })
             }
@@ -34,7 +35,7 @@ async function verifyTokenStudent(req,res,next){
             })
         }
         if(error.message=="No token received"){
-            return res.status(400).json({
+            return res.status(error.statusCode).json({
                 message:"No token received",
                 success:false
             })
@@ -46,14 +47,14 @@ async function verifyTokenAdmin(req,res,next){
     try {
         const token=req.headers.authorization
         if(!token){
-            throw new Error("No token received")
+            throw new DefinedError("No token received",400)
         }
         const result=jwt.verify(token.substring(7),JWT_SALT);
         if(result.adminuserid==ADMIN_USER_ID && result.adminpassword==ADMIN_PASSWORD){
             next();
         }
         else{
-            return res.status(400).json({
+            return res.status(401).json({
                 message:"Unauthorized access",
                 success:false
             })
@@ -72,12 +73,15 @@ async function verifyTokenAdmin(req,res,next){
             })
         }
         if(error.message=="No token received"){
-            return res.status(400).json({
+            return res.status(error.statusCode).json({
                 message:"No token received",
                 success:false
             })
         }
-        console.log(error)
+        return res.status(400).json({
+            message:"Error in token",
+            success:false
+        })
     }
 }
 module.exports={

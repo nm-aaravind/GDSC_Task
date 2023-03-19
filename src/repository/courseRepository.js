@@ -1,4 +1,4 @@
-
+const DefinedError=require("../utils/error")
 const Course=require("../models/course")
 const Student=require("../models/student")
 class courseRepository{
@@ -12,18 +12,17 @@ class courseRepository{
             });
             return response;
         } catch (error) {
-            // if(error.message=)
             if(error.message.match('E11000 duplicate key error collection: gdsc.courses index: courseName_1 dup key:')){
-                throw new Error("Duplicate course entry")
+                throw new DefinedError("Duplicate course entry",500)
             }
-            console.log(error)
+            throw error;
         }
     }
     async deleteCourse(data){
         try {
             const response=await Course.findOneAndDelete(data);
             if(!response){
-                throw new Error("No such course exists")
+                throw new DefinedError("Course Not Found",404)
             }
             const students=await Student.find({
                 _id:response.students
@@ -35,7 +34,7 @@ class courseRepository{
             })
             return true;
         } catch (error) {
-            if(error.message=="No such course exists"){
+            if(error.message=="Course Not Found"){
                 throw error
             }
             console.log(error)
@@ -47,36 +46,66 @@ class courseRepository{
                 courseCode:data.courseCode
             });
             if(!course){
-                throw new Error("No course exists");
+                throw new DefinedError("Course Not Found",404);
             }
             if(course.students.includes(data.id)){
-                throw new Error("Already registered")
+                throw new DefinedError("Already registered",500)
             }
             else{
                 course.capacity=course.capacity-1;
                 course.students.push(data.id);
                 await course.save();
-                const student=await Student.findById(data.id);
+                const student=await Student.findOne({
+                    regno:data.regno
+                });
                 student.courses.push(course.id);
                 await student.save();
                 return {courseName:course.courseName,courseCode:course.courseCode}
             }
         } catch (error) {
-            if(error.message=="Already registered" || error.message=="No course exists"){
+            if(error.message=="Already registered" || error.message=="Course Not Found"){
                 throw error;
             }
             if(error.errors.capacity.properties.message=='No more seats left'){
                 throw new Error('No more seats left')
             }
-            console.log(error)
+            throw error;
+        }
+    }
+    async removeStudentRegistration(data){
+        try {
+            const response=await Course.findOne({
+                courseName:data.courseName,
+                courseCode:data.courseCode
+            });
+            if(!response){
+                throw new DefinedError("Course Not Found",404)
+            }
+            const student=await Student.findOne({
+                regno:data.regno
+            })
+            if(!student){
+                throw new DefinedError("Student Not Found",404)
+            }
+            if(!(response.students.includes(student.id) && student.courses.includes(response.id))){
+                throw new DefinedError("Student not registered for the course",400)
+            }
+            response.students.splice(response.students.indexOf(student.id),1)
+            student.courses.splice(student.courses.indexOf(response.id),1)
+            console.log(response,student)
+            await response.save();
+            await student.save();
+            return true;
+        } catch (error) {
+            throw error
         }
     }
     async listCourses(){
         try {
-            const response=await Course.find();
+            const response=await Course.find().select(['courseName','courseCode','capacity','-_id']);
             return response
         } catch (error) {
-            console.log(error)
+            throw error;
         }
     }
 }

@@ -1,3 +1,4 @@
+const DefinedError=require("../utils/error")
 const Student=require("../models/student")
 const Course=require("../models/course")
 class studentRepository{
@@ -11,23 +12,20 @@ class studentRepository{
             };
         } catch (error) {
             if(error.message.match('E11000 duplicate key error collection:')){
-                throw new Error("User already exists")
+                throw new DefinedError("User already exists",500)
             }
-            console.log(error)
+            throw error
         }
     }
     async getForSignIn(data){
         try {
             const response=await Student.findOne({regno:data.regno})
             if(!response){
-                throw new Error("Unregistered user")
+                throw new DefinedError("Unregistered user",401)
             }
             return response;
         } catch (error) {
-            if(error.message=='Unregistered user'){
-                throw error
-            }
-            console.log(error)
+            throw error;
         }
     }
     async getById(data){
@@ -35,7 +33,17 @@ class studentRepository{
             const response=await Student.findById(data).populate('courses');
             return response;
         } catch (error) {
-            console.log(error)
+            throw error;
+        }
+    }
+    async getByRegno(data){
+        try {
+            const response=await Student.findOne({
+                regno:data
+            });
+            return response;
+        } catch (error) {
+            throw error;
         }
     }
     async viewRegisteredCourses(data){
@@ -46,7 +54,7 @@ class studentRepository{
             });
             return result;
         } catch (error) {
-            console.log(error)
+            throw error
         }
     }
 }

@@ -1,3 +1,4 @@
+const DefinedError=require("../utils/error")
 const studentRepository=require("../repository/studentRepository");
 const courseRepository=require("../repository/courseRepository")
 const pw=require("../utils/encrypt-decrypt")
@@ -13,17 +14,14 @@ class studentService{
             const response=await this.StudentRepository.createStudent(data);
             return response;
         } catch (error) {
-            if(error.message=='User already exists'){
-                throw error;
-            }
-            console.log(error)
+            throw error;
         }
     }
     async getForSignIn(data){
         try {
             const response=await this.StudentRepository.getForSignIn(data);
             if(!(pw.checkPassword(response.password,data.password))){
-                throw new Error("Invalid password");
+                throw new DefinedError("Invalid password",401);
             }
             const token=this.createToken({
                 regno:response.regno,
@@ -31,10 +29,7 @@ class studentService{
             });
             return token;
         } catch (error) {
-            if(error.message=='Unregistered user' || error.message=='Invalid password'){
-                throw error;
-            }
-            console.log(error)
+            throw error;
         }
     }
     async getById(data){
@@ -42,7 +37,7 @@ class studentService{
             const response=await this.StudentRepository.getById(data);
             return response;
         } catch (error) {
-            console.log(error)
+            throw error;
         }
     }
     async registerCourse(data){
@@ -50,18 +45,30 @@ class studentService{
             const response=await this.CourseRepository.registerCourse(data);
             return response
         } catch (error) {
-            if(error.message=='Already registered' || error.message=="No course exists"){
-                throw error
-            }
-            console.log(error)
+            throw error;
         }
     }
+    async addStudentRegistration(data){
+        try {
+            const student=await this.StudentRepository.getByRegno(data.regno)
+            if(!student){
+                throw new DefinedError("Student Not Found",404)
+            }
+            else{
+                const response=this.registerCourse({...data,id:student.id})
+                return response;
+            }
+        } catch (error) {
+            throw error;
+        }
+    }
+    
     async listCourses(){
         try {
             const response=await this.CourseRepository.listCourses();
             return response;
         } catch (error) {
-            console.log(error)
+            throw error;
         }
     }
     async viewRegisteredCourses(data){
@@ -69,7 +76,7 @@ class studentService{
             const response=await this.StudentRepository.viewRegisteredCourses(data);
             return response;
         } catch (error) {
-            console.log(error)
+            throw error;
         }
     }
     createToken(data){
@@ -77,7 +84,7 @@ class studentService{
             const token=jwt.sign(data,JWT_SALT,{expiresIn:'1h'})
             return token;
         } catch (error) {
-            console.log(error)
+            throw error;
         }
     }
 }
