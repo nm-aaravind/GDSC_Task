@@ -3,17 +3,17 @@
 -Setting up the project on Linux machine:
 
     -Install Nodejs using the following command: "sudo apt install nodejs"
-    -Install npm using: sudo apt install npm
-    -VErify the Nodejs version using: "node -v" or "node -version"
+    -Install npm using: "sudo apt install npm"
+    -Verify the Nodejs version using: "node -v" or "node -version"
     -Verify the npm version using: "npm -v" or "npm -version"
     -Clone the repository using: "git clone https://github.com/nm-aaravind/GDSC_Task.git"
     -Go into the repository using: "cd GDSC_Task/"
-    -Install the packages and dependencies using: "npm i"
-    -Create .env file with the following content:
+    -Create .env file inside GDSC_Task folder with the following content:
         JWT_SALT="gdsctask"
         PORT=3000
         ADMIN_USER_ID="admin@google.com"
         ADMIN_PASSWORD="admin"
+    -Install the packages and dependencies using: "npm i"
     -Use the following command to start the server on PORT 3000: "npm start" or "npx nodemon src/index.js"
 
 -Database:
