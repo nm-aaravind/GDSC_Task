@@ -1,5 +1,5 @@
-Documentation: doc.pdf
-Setting up the project on Linux machine:
+-Documentation: doc.pdf
+-Setting up the project on Linux machine:
 
     -Install Nodejs using the following command: "sudo apt install nodejs"
     -Install npm using: sudo apt install npm
@@ -15,11 +15,11 @@ Setting up the project on Linux machine:
         ADMIN_PASSWORD="admin"
     -Use the following command to start the server on PORT 3000: "npm start" or "npx nodemon src/index.js"
 
-Database:
+-Database:
     -MongoDB connects to:"mongodb://127.0.0.1:27017/gdsc"
     -gdsc is the name of database
 
-Models used in the project:
+-Models used in the project:
     -MongoDB is used as database and mongoose is used as ODM.
     -This project uses two models namely Student and Course.
     -Student model fields are:
